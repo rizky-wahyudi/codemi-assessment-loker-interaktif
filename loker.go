@@ -111,6 +111,37 @@ func leaveLoker(command []string, loker *[]Loker) (bool, int, error) {
 	}
 }
 
+func findById(loker []Loker, id int) int {
+	for i := 0; i < len(loker); i++ {
+		if loker[i].itemId == id && !reflect.ValueOf(loker[i]).IsZero() {
+			return i
+		}
+	}
+	return -1
+}
+
+// Find Loker
+func findLoker(command []string, loker *[]Loker) (bool, int, error) {
+	if len(command) == 2 {
+		id, err := strconv.Atoi(command[1])
+		if err != nil {
+			return false, 0, err
+		} else {
+			res := findById(*loker, id)
+			if res != -1 {
+				return true, res + 1, nil
+			} else {
+				return false, 0, fmt.Errorf("Nothing match with ID %d", id)
+			}
+
+		}
+	} else if len(command) > 2 {
+		return false, 0, fmt.Errorf("Too much argument, expected 1, have %d", len(command)-1)
+	} else {
+		return false, 0, fmt.Errorf("Too few argument, expected 1, have %d", len(command)-1)
+	}
+}
+
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	var loker []Loker
@@ -184,7 +215,16 @@ func main() {
 
 			// Find
 			case strings.EqualFold(commandSplit[0], "find"):
-				fmt.Println("find function")
+				if !isLokerInitialized(loker) {
+					fmt.Println("You haven't initialized the Locker yet")
+				} else {
+					res, info, err := findLoker(commandSplit, &loker)
+					if res {
+						fmt.Println("ID Number match in Loker No.", info)
+					} else {
+						fmt.Println("Error:", err)
+					}
+				}
 				break
 
 			// Search
