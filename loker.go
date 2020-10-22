@@ -174,7 +174,14 @@ func main() {
 	var loker []Loker
 	var command string
 	var commandSplit []string
+
+	fmt.Println("============================")
+	fmt.Println("|    INTERACTIVE LOKER     |")
+	fmt.Println("============================")
+
 	for {
+		fmt.Println("")
+		fmt.Print(">> ")
 		scanner.Scan()
 		command = scanner.Text()
 
@@ -188,26 +195,29 @@ func main() {
 			case strings.EqualFold(commandSplit[0], "init"):
 				res, err := initializeLoker(commandSplit, &loker)
 				if res {
-					fmt.Println("Loker initialized with", len(loker), "slot(s)")
+					fmt.Println(">>>> Loker initialized with", len(loker), "slot(s)")
 				} else {
-					fmt.Println("Error:", err)
+					fmt.Println("! Error:", err)
 				}
 				break
 
 			// Status
 			case strings.EqualFold(commandSplit[0], "status"):
 				if !isLokerInitialized(loker) {
-					fmt.Println("You haven't initialized the Locker yet")
+					fmt.Println("! You haven't initialized the Locker yet")
 				} else {
 					if isLokerEmpty(loker) {
-						fmt.Println("Loker empty")
+						fmt.Println(">>>> Loker empty")
 					} else {
-						fmt.Printf("%-10s %-10s %-10s\n", "Loker No.", "ID Type", "ID Number")
+						fmt.Println("|--------------------------------|")
+						fmt.Printf("|%-10s %-10s %-10s|\n", "Loker No.", "ID Type", "ID Number")
+						fmt.Println("|--------------------------------|")
 						for i := 0; i < len(loker); i++ {
 							if !reflect.ValueOf(loker[i]).IsZero() {
-								fmt.Printf("%-10d %-10s %-10d\n", loker[i].num, loker[i].itemType, loker[i].itemId)
+								fmt.Printf("|%-10d %-10s %-10d|\n", loker[i].num, loker[i].itemType, loker[i].itemId)
 							}
 						}
+						fmt.Println("|--------------------------------|")
 					}
 				}
 				break
@@ -215,13 +225,13 @@ func main() {
 			// Input
 			case strings.EqualFold(commandSplit[0], "input"):
 				if !isLokerInitialized(loker) {
-					fmt.Println("You haven't initialized the Locker yet")
+					fmt.Println("! You haven't initialized the Locker yet")
 				} else {
 					res, info, err := inputLoker(commandSplit, &loker)
 					if res {
-						fmt.Println("Id Card stored in loker", info)
+						fmt.Println(">>>> Id Card stored in loker", info)
 					} else {
-						fmt.Println("Error:", err)
+						fmt.Println("! Error:", err)
 					}
 				}
 				break
@@ -229,16 +239,16 @@ func main() {
 			// Leave
 			case strings.EqualFold(commandSplit[0], "leave"):
 				if !isLokerInitialized(loker) {
-					fmt.Println("You haven't initialized the Locker yet")
+					fmt.Println("! You haven't initialized the Locker yet")
 				} else {
 					if isLokerEmpty(loker) {
-						fmt.Println("Loker empty")
+						fmt.Println(">>>> Loker empty")
 					} else {
 						res, info, err := leaveLoker(commandSplit, &loker)
 						if res {
-							fmt.Println("Success empty Loker No.", info)
+							fmt.Println(">>>> Success empty Loker No.", info)
 						} else {
-							fmt.Println("Error:", err)
+							fmt.Println("! Error:", err)
 						}
 					}
 				}
@@ -247,16 +257,16 @@ func main() {
 			// Find
 			case strings.EqualFold(commandSplit[0], "find"):
 				if !isLokerInitialized(loker) {
-					fmt.Println("You haven't initialized the Locker yet")
+					fmt.Println("! You haven't initialized the Locker yet")
 				} else {
 					if isLokerEmpty(loker) {
-						fmt.Println("Loker empty")
+						fmt.Println(">>>> Loker empty")
 					} else {
 						res, info, err := findLoker(commandSplit, &loker)
 						if res {
-							fmt.Println("ID Number match in Loker No.", info)
+							fmt.Println(">>>> ID Number match in Loker No.", info)
 						} else {
-							fmt.Println("Error:", err)
+							fmt.Println("! Error:", err)
 						}
 					}
 				}
@@ -265,28 +275,41 @@ func main() {
 			// Search
 			case strings.EqualFold(commandSplit[0], "search"):
 				if !isLokerInitialized(loker) {
-					fmt.Println("You haven't initialized the Locker yet")
+					fmt.Println("! You haven't initialized the Locker yet")
 				} else {
 					if isLokerEmpty(loker) {
-						fmt.Println("Loker empty")
+						fmt.Println(">>>> Loker empty")
 					} else {
 						res, info, err := searchLoker(commandSplit, &loker)
 						if res {
-							fmt.Println("Found", len(info), "ID that match with the type: ", info)
+							fmt.Println(">>>> Found", len(info), "ID that match with the type: ", info)
 						} else {
-							fmt.Println("Error:", err)
+							fmt.Println("! Error:", err)
 						}
 					}
 				}
 				break
 
+			case strings.EqualFold(commandSplit[0], "help"):
+				fmt.Println("Command List")
+				fmt.Printf("%-30s: %-30s\n", "Init <size>", "Initialize Loker size")
+				fmt.Printf("%-30s: %-30s\n", "Status", "Display all non empty Loker")
+				fmt.Printf("%-30s: %-30s\n", "Input <ID Type> <ID Number>", "Add ID Card to empty Loker")
+				fmt.Printf("%-30s: %-30s\n", "Leave <Loker No.>", "Empty the Loker in specific No.")
+				fmt.Printf("%-30s: %-30s\n", "Find <ID Number>", "Find Loker by ID Number")
+				fmt.Printf("%-30s: %-30s\n", "Search <Id Type>", "Find every ID Number by ID Type")
+				fmt.Printf("%-30s: %-30s\n", "Exit", "Exit Program")
+				break
+
 			// Exit
 			case strings.EqualFold(commandSplit[0], "exit"):
+				fmt.Println("Program exit...")
 				os.Exit(0)
 
 			// Default: No command found
 			default:
 				fmt.Println("No command found with name", commandSplit[0])
+				fmt.Println("Try 'help' to see command list")
 			}
 		}
 	}
