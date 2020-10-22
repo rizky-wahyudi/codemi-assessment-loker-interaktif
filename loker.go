@@ -27,7 +27,7 @@ func initializeLoker(command []string, loker *[]Loker) (bool, error) {
 				*loker = make([]Loker, size)
 				return true, nil
 			} else {
-				return false, errors.New("Cannot initialize loker less than 1")
+				return false, errors.New("Cannot initialize Loker less than 1")
 			}
 		}
 	} else if len(command) > 2 {
@@ -82,6 +82,32 @@ func inputLoker(command []string, loker *[]Loker) (bool, int, error) {
 		return false, 0, fmt.Errorf("Too much argument, expected 2, have %d", len(command)-1)
 	} else {
 		return false, 0, fmt.Errorf("Too few argument, expected 2, have %d", len(command)-1)
+	}
+}
+
+// Leave Loker
+func leaveLoker(command []string, loker *[]Loker) (bool, int, error) {
+	if len(command) == 2 {
+		target, err := strconv.Atoi(command[1])
+		if err != nil {
+			return false, 0, err
+		} else {
+			if target >= 1 {
+				if !reflect.ValueOf((*loker)[target-1]).IsZero() {
+					(*loker)[target-1] = Loker{}
+					return true, target, nil
+				} else {
+					return false, 0, errors.New("Loker already empty")
+				}
+			} else {
+				return false, 0, errors.New("Loker number cannot less than 1")
+			}
+
+		}
+	} else if len(command) > 2 {
+		return false, 0, fmt.Errorf("Too much argument, expected 1, have %d", len(command)-1)
+	} else {
+		return false, 0, fmt.Errorf("Too few argument, expected 1, have %d", len(command)-1)
 	}
 }
 
@@ -144,7 +170,16 @@ func main() {
 
 			// Leave
 			case strings.EqualFold(commandSplit[0], "leave"):
-				fmt.Println("leave function")
+				if !isLokerInitialized(loker) {
+					fmt.Println("You haven't initialized the Locker yet")
+				} else {
+					res, info, err := leaveLoker(commandSplit, &loker)
+					if res {
+						fmt.Println("Success empty Loker No.", info)
+					} else {
+						fmt.Println("Error:", err)
+					}
+				}
 				break
 
 			// Find
