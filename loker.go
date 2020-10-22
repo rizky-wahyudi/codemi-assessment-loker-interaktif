@@ -200,7 +200,7 @@ func main() {
 					fmt.Println("You haven't initialized the Locker yet")
 				} else {
 					if isLokerEmpty(loker) {
-						fmt.Println("Loker Empty")
+						fmt.Println("Loker empty")
 					} else {
 						fmt.Printf("%-10s %-10s %-10s\n", "Loker No.", "ID Type", "ID Number")
 						for i := 0; i < len(loker); i++ {
@@ -231,11 +231,15 @@ func main() {
 				if !isLokerInitialized(loker) {
 					fmt.Println("You haven't initialized the Locker yet")
 				} else {
-					res, info, err := leaveLoker(commandSplit, &loker)
-					if res {
-						fmt.Println("Success empty Loker No.", info)
+					if isLokerEmpty(loker) {
+						fmt.Println("Loker empty")
 					} else {
-						fmt.Println("Error:", err)
+						res, info, err := leaveLoker(commandSplit, &loker)
+						if res {
+							fmt.Println("Success empty Loker No.", info)
+						} else {
+							fmt.Println("Error:", err)
+						}
 					}
 				}
 				break
@@ -245,11 +249,15 @@ func main() {
 				if !isLokerInitialized(loker) {
 					fmt.Println("You haven't initialized the Locker yet")
 				} else {
-					res, info, err := findLoker(commandSplit, &loker)
-					if res {
-						fmt.Println("ID Number match in Loker No.", info)
+					if isLokerEmpty(loker) {
+						fmt.Println("Loker empty")
 					} else {
-						fmt.Println("Error:", err)
+						res, info, err := findLoker(commandSplit, &loker)
+						if res {
+							fmt.Println("ID Number match in Loker No.", info)
+						} else {
+							fmt.Println("Error:", err)
+						}
 					}
 				}
 				break
@@ -259,11 +267,15 @@ func main() {
 				if !isLokerInitialized(loker) {
 					fmt.Println("You haven't initialized the Locker yet")
 				} else {
-					res, info, err := searchLoker(commandSplit, &loker)
-					if res {
-						fmt.Println("Found", len(info), "ID that match with the type: ", info)
+					if isLokerEmpty(loker) {
+						fmt.Println("Loker empty")
 					} else {
-						fmt.Println("Error:", err)
+						res, info, err := searchLoker(commandSplit, &loker)
+						if res {
+							fmt.Println("Found", len(info), "ID that match with the type: ", info)
+						} else {
+							fmt.Println("Error:", err)
+						}
 					}
 				}
 				break
