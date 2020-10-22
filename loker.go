@@ -54,6 +54,15 @@ func findEmptyLoker(loker []Loker) int {
 	return -1
 }
 
+func isLokerEmpty(loker []Loker) bool {
+	for i := 0; i < len(loker); i++ {
+		if !reflect.ValueOf(loker[i]).IsZero() {
+			return false
+		}
+	}
+	return true
+}
+
 // Input Loker
 func inputLoker(command []string, loker *[]Loker) (bool, int, error) {
 	if len(command) == 3 {
@@ -103,7 +112,20 @@ func main() {
 
 			// Status
 			case strings.EqualFold(commandSplit[0], "status"):
-				fmt.Println("status function")
+				if !isLokerInitialized(loker) {
+					fmt.Println("You haven't initialized the Locker yet")
+				} else {
+					if isLokerEmpty(loker) {
+						fmt.Println("Loker Empty")
+					} else {
+						fmt.Printf("%-10s %-10s %-10s\n", "Loker No.", "ID Type", "ID Number")
+						for i := 0; i < len(loker); i++ {
+							if !reflect.ValueOf(loker[i]).IsZero() {
+								fmt.Printf("%-10d %-10s %-10d\n", loker[i].num, loker[i].itemType, loker[i].itemId)
+							}
+						}
+					}
+				}
 				break
 
 			// Input
