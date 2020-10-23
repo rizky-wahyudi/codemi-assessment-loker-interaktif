@@ -38,3 +38,9 @@ cd codemi-assessment-loker-interaktif
 go build loker.go
 ./loker
 ```
+
+### To run unit testing
+
+```
+go test loker.go loker_test.go -v
+```
